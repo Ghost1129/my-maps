@@ -60,7 +60,7 @@ export default function Home() {
      
       <main className="bg-blue-100 h-screen w-screen md:py-10 overflow-scroll">
         
-        <p className="text-2xl text-blue-800 text-center hidden sm:block">Let's calculate <span className='font-bold'>distance</span> from Google maps</p>
+        <p className="text-2xl text-blue-800 text-center hidden sm:block">Let calculate <span className='font-bold'>distance</span> from Google maps</p>
         <div className="flex flex-col-reverse sm:flex-row justify-between md:mt-10">
          <div className='md:w-1/2'>
          <div className='flex flex-col items-center my-2 sm:flex-row md:justify-center'> 
