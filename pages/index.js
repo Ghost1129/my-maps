@@ -1,12 +1,55 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '../styles/Home.module.css'
+import Map from '../components/Map'
+import { useState } from 'react';
+import Auto from '../components/Auto';
+import { GoogleMap, useLoadScript,DirectionsService } from '@react-google-maps/api';
 
-const inter = Inter({ subsets: ['latin'] })
+
+
+
 
 export default function Home() {
+  const [origin, setOrigin] = useState(null);
+  const [destination, setDestination] = useState(null);
+  const [distance, setDistance] = useState("-")
+  const [duration, setDuration] = useState(null);
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [originName, setOriginName] = useState(null);
+  const [destinationName, setDestinationName] = useState(null);
+  const [type, setType] = useState("DRIVING");
+
+
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: "AIzaSyBgytS3Q3I80dNu4A5ipl6QQqVDC64TN3E",
+    libraries: ["places"],
+  });
+
+  const handleType = (e) => {
+    setType(e.target.value);
+    calculateRoute();
+  }
+
+  async function calculateRoute() {
+    if (origin === null || destination === null) return;
+    const directionsService = new google.maps.DirectionsService();
+    setDirectionsResponse(null);
+    const results = await directionsService.route({
+      origin: origin,
+      destination: destination,
+      travelMode: type,
+    })
+    setDirectionsResponse(results);
+    setDistance(results.routes[0].legs[0].distance.text);
+    setDuration(results.routes[0].legs[0].duration.text);
+
+  }
+
+  
+
+
+  if (!isLoaded) return <div>Loading...</div>;
   return (
+    
     <>
       <Head>
         <title>Create Next App</title>
@@ -14,109 +57,44 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.js</code>
-          </p>
+     
+      <main className="bg-blue-100 h-screen w-screen md:py-10 overflow-scroll">
+        
+        <p className="text-2xl text-blue-800 text-center hidden sm:block">Let's calculate <span className='font-bold'>distance</span> from Google maps</p>
+        <div className="flex flex-col-reverse sm:flex-row justify-between md:mt-10">
+         <div className='md:w-1/2'>
+         <div className='flex flex-col items-center my-2 sm:flex-row md:justify-center'> 
+            <div>
+              <Auto setnav={setOrigin} setName={setOriginName} type="origin"/>
+              <Auto setnav={setDestination} setName={setDestinationName} type="destination"/>
+            </div>
+            <div className='flex flex-col gap-2 md:gap-6 md:ml-10'>
+            <select className='bg-blue-700 text-white px-6 py-2 rounded-full' onChange={handleType}>
+              <option value="DRIVING">Driving</option>
+              <option value="WALKING">Walking</option>
+              <option value="BICYCLING">Bicycling</option>
+            </select>
+              <button className='bg-blue-800 text-white px-6 py-2 rounded-full' onClick={calculateRoute}>Calculate</button>
+            </div>
+            
+          </div>
+          
           <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
+            <div className='bg-white p-5 mx-4 md:mx-20 justify-between flex'>
+              <span className='text-lg font-bold '>Distance</span>
+              <span className='text-blue-400 font-bold'>{distance} kms</span>
+            </div>
+            <p className='text-sm mt-1'>
+            The distance between <span className='font-bold'>{originName}</span> and <span className='font-bold'>{destinationName}</span> via the seleted route is <span className='font-bold'>{distance}</span> kms.
+            </p>
           </div>
+         </div>
+          <div className='relative w-full sm:w-[500px] my-12 mx-1'>
+          <Map origin={origin} destination={destination} directionsResponse={directionsResponse}/>
         </div>
-
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
-            />
-          </div>
         </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
+        
+       
       </main>
     </>
   )
