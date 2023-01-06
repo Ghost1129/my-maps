@@ -85,7 +85,7 @@ export default function Home() {
               <span className='text-blue-400 font-bold'>{distance} kms</span>
             </div>
             <p className='text-sm mt-1'>
-            The distance between <span className='font-bold'>{originName}</span> and <span className='font-bold'>{destinationName}</span> via the seleted route is <span className='font-bold'>{distance}</span> kms
+            The distance between <span className='font-bold'>{originName}</span> and <span className='font-bold'>{destinationName}</span> via the seleted route is <span className='font-bold'>{distance}</span> kms, and will take approximately <span className='font-bold'>{duration}</span>.
             </p>
           </div>
          </div>
