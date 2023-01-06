@@ -11,7 +11,7 @@ import { GoogleMap, useLoadScript,DirectionsService } from '@react-google-maps/a
 export default function Home() {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
-  const [distance, setDistance] = useState("-")
+  const [distance, setDistance] = useState(0)
   const [duration, setDuration] = useState(null);
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [originName, setOriginName] = useState(null);
@@ -85,7 +85,7 @@ export default function Home() {
               <span className='text-blue-400 font-bold'>{distance} kms</span>
             </div>
             <p className='text-sm mt-1'>
-            The distance between <span className='font-bold'>{originName}</span> and <span className='font-bold'>{destinationName}</span> via the seleted route is <span className='font-bold'>{distance}</span> kms.
+            The distance between <span className='font-bold'>{originName}</span> and <span className='font-bold'>{destinationName}</span> via the seleted route is <span className='font-bold'>{distance}</span> kms
             </p>
           </div>
          </div>
